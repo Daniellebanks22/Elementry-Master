@@ -1,0 +1,183 @@
+library(forecast)
+library(readr)
+library(zoo)
+amer <- read_csv("DataMung/AAL (1).csv", 
+    col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+        Open = col_skip(), High = col_skip(), 
+        Low = col_skip(), `Adj Close` = col_skip()))
+del <- read_csv("DataMung/DAL (1).csv", col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+    Open = col_skip(), High = col_skip(), 
+    Low = col_skip(), `Adj Close` = col_skip()))
+south <- read_csv("DataMung/LUV.csv", col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+    Open = col_skip(), High = col_skip(), 
+    Low = col_skip(), `Adj Close` = col_skip()))
+    
+unit <- read_csv("DataMung/UAL.csv", col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+    Open = col_skip(), High = col_skip(), 
+    Low = col_skip(), `Adj Close` = col_skip())) 
+   
+cov <- read_csv("DataMung/national-history.csv", 
+    col_types = cols(date = col_date(format = "%Y-%m-%d"), 
+        death = col_skip(), deathIncrease = col_skip(), 
+        inIcuCumulative = col_skip(), inIcuCurrently = col_skip(), 
+        hospitalizedIncrease = col_skip(), 
+        hospitalizedCurrently = col_skip(), 
+        hospitalizedCumulative = col_skip(), 
+        negative = col_skip(), negativeIncrease = col_skip(), 
+        onVentilatorCumulative = col_skip(), 
+        onVentilatorCurrently = col_skip(), 
+        positiveIncrease = col_skip(), recovered = col_skip(), 
+        states = col_skip(), totalTestResults = col_skip(), 
+        totalTestResultsIncrease = col_skip()))
+del1<-na.omit(del)
+south1<-na.omit(south)
+unit1<-na.omit(unit)
+amer1<-na.omit(amer)
+delta<- data.frame(del1, stringsAsFactors = FALSE)
+american<-data.frame(amer1, stringsAsFactors = FALSE)
+united<-data.frame(unit1, stringsAsFactors = FALSE)
+southwest<- data.frame(south1, stringsAsFactors = FALSE)
+covid<-data.frame(cov,stringsAsFactors = FALSE)
+covid1<-covid[order(as.Date(covid$date)),]
+unite<-united[-1,]
+american<-american[-1,]
+southwest<-southwest[-1,]
+delta<-delta[-1,]
+
+
+delta.z = zoo(x = delta$Close, order.by = delta$Date)
+
+american.z = zoo(x= american$Close, order.by = american$Date)
+
+covid.z = zoo(x=covid1$positive, order.by = covid1$date)
+ 
+united.z = zoo(x= united$Close, order.by = united$Date)
+
+southwest.z= zoo(x= southwest$Close, order.by = southwest$Date)
+
+
+all = cbind(delta.z, american.z, united.z, southwest.z)
+
+allflight <- na.omit(all)
+
+par(mfrow=c(1,2))
+
+
+
+plot(allflight, plot.type="single",main="2020 Major Airline Stock Prices", ylab="Close Price ($)",col=c("blue", "purple", "yellow", "green"), xlab= ("Months in 2020"), lty=1:2, lwd=3)
+legend(x = "topright", legend=c("delta","american","united","southwest"),col=c("blue","purple","yellow", "green"),lty=1:2)  
+plot(covid.z, plot.type="single", main= "National Confirmed Covid Cases", ylab= "Number of Confirmed Cases (Thousands)", xlab= "Months in 2020", col=c("red"), lty=1:2,lwd=4)
+
+
+NA
+NA
+NA
+south19 <- read_csv("C:/Users/Danie/Downloads/LUV.csv", 
+    col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+        Open = col_skip(), High = col_skip(), 
+        Low = col_skip(), `Adj Close` = col_skip()))
+unit19 <- read_csv("C:/Users/Danie/Downloads/UAL.csv", 
+     col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+         Open = col_skip(), High = col_skip(), 
+         Low = col_skip(), `Adj Close` = col_skip()))
+delta19 <- read_csv("C:/Users/Danie/Downloads/DAL (2).csv", 
+    col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+        Open = col_skip(), High = col_skip(), 
+        Low = col_skip(), `Adj Close` = col_skip()))
+american19 <- read_csv("C:/Users/Danie/Downloads/AAL (1).csv", 
+    col_types = cols(Date = col_date(format = "%Y-%m-%d"), 
+        Open = col_skip(), High = col_skip(), 
+        Low = col_skip(), `Adj Close` = col_skip()))
+delta9<- data.frame(delta19, stringsAsFactors = FALSE)
+south9<- data.frame(south19, stringsAsFactors = FALSE)
+american9<- data.frame(american19, stringsAsFactors = FALSE)
+unit9<- data.frame(unit19, stringsAsFactors = FALSE)
+delta.z = zoo(x = delta$Close, order.by = delta$Date)
+
+american.y = zoo(x= american9$Close, order.by = american9$Date)
+
+delta.y = zoo(x = delta9$Close, order.by = delta9$Date)
+ 
+united.y = zoo(x= unit9$Close, order.by = unit9$Date)
+
+southwest.y= zoo(x= south9$Close, order.by = south9$Date)
+
+all19 = cbind(delta.y, american.y, united.y, southwest.y)
+
+allflight19 <- na.omit(all19)
+
+MAINflight<-rbind(allflight19,allflight)
+column names differ
+
+plot(MAINflight, plot.type="single",main="Stock Price from 2019-2020", ylab="Close Price($)",col=c("blue", "purple", "yellow", "green"), xlab= ("Year"), lty=1:2, lwd=3)
+legend(x = "topright", legend=c("delta","american","united","southwest"),col=c("blue","purple","yellow", "green"),lty=1:2)
+
+
+NA
+NA
+
+
+unit9<-na.omit(unit9)
+united<-na.omit(united)
+amer<-na.omit(amer)
+
+
+delta$months<-months(delta$Date)
+delta$year<- format(delta$Date,format= "%y")
+delta20<-aggregate(delta$Volume ~ delta$months + delta$year, delta, mean)
+delta9$months<-months(delta9$Date)
+delta9$year<- format(delta9$Date,format= "%y")
+delta19<-aggregate(delta9$Volume ~ delta9$months + delta9$year, delta9, mean)
+
+delta19<-delta19[-1,]
+delta20<-delta20[-1,]
+
+unite$months<-months(unite$Date)
+unite$year<-format(unite$Date,format= "%y")
+unite20<-aggregate(unite$Volume ~ unite$months + unite$year, unite, mean)
+unit9$months<-months(unit9$Date)
+unit9$year<-format(unit9$Date,format= "%y")
+unite19<-aggregate(unit9$Volume ~ unit9$months + unit9$year, unit9, mean)
+unite19<-unite19[-1,]
+
+south9$months<-months(south9$Date)
+south9$year<-format(south9$Date,format= "%y")
+southwest19<-aggregate(south9$Volume ~ south9$months + south9$year, south9, mean)
+southwest$months<-months(southwest$Date)
+southwest$year<-format(southwest$Date,format= "%y")
+southwest20<-aggregate(southwest$Volume ~ southwest$months + southwest$year, southwest, mean)
+southwest19<-southwest19[-1,]
+
+american9$months<-months(american9$Date)
+american9$year<-format(american9$Date,format= "%y")
+american19<-aggregate(american9$Volume ~ american9$months + american9$year, american9, mean)
+
+amer$months<-months(amer$Date)
+amer$year<-format(amer$Date,format= "%y")
+american20<-aggregate(amer$Volume ~ amer$months + amer$year, amer, mean)
+american19<-american19[-1,]
+american20<-american20[-1,]
+
+
+
+delt19<-mean(delta19$`delta9$Volume`)
+delt20<-mean(delta20$`delta$Volume`)
+delt19
+[1] 6380677
+delt20
+[1] 31522712
+uni19<-mean(unite19$`unit9$Volume`)
+uni20<-mean(unite20$`unite$Volume`)
+
+southw19<-mean(southwest19$`south9$Volume`)
+southw20<-mean(southwest20$`southwest$Volume`)
+
+murica19<-mean(american19$`american9$Volume`)
+murica20<-mean(american20$`amer$Volume`)
+
+flight<-data.frame(delt19,delt20, murica19, murica20, uni19,uni20, southw19, southw20)
+names(flight) <- c("DELTA 19","DELTA 20", "AMERICAN19", "AMERICAN20","UNITED 19", "UNITED20","SOUTHWEST19", "SOUTHWEST20")
+
+
+barplot(height=as.matrix(flight), main="Average Volume of Stocks Traded", ylab="Shares Purchased (millions)", xlab = "Airline", beside=TRUE,col=c("blue","blue","purple", "purple","yellow", "yellow", "green","green"))
+legend("topleft",c("delta","american","united","southwest"), cex=1.0, bty="n",fill=c("blue","purple","yellow", "green"))
