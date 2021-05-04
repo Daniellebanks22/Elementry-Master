@@ -1,14 +1,4 @@
----
-title: "Youtube Map"
-author: "Danielle Banks"
-date: "4/27/2021"
-output: html_document
-runtime: shiny
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ```{r}
 library(stats)
